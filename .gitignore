@@ -1,20 +1,26 @@
-# Maven build files
-target
-*.log
-maven-eclipse.xml
-build.properties
-site-content
-*~
-
-# IntelliJ IDEA files
-.idea
-.iws
+# IntelliJ IDEA
+.idea/
 *.iml
 *.ipr
+*.iws
 
-# Eclipse files
-.settings
-.classpath
+# Eclipe
 .project
-.externalToolBuilders
-/.checkstyle
+.classpath
+.settings/
+
+# Output dirs
+out/
+target/
+classes/
+bin/
+build/
+docs/
+.gradle/
+sshj.jar
+
+# MacOS X
+.DS_Store
+
+# VSCode
+.metals/
