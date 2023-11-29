@@ -14,8 +14,8 @@
 # limitations under the License.
 
 github:
-  description: "Apache Commons Text"
-  homepage: https://commons.apache.org/text/
+  description: "Apache Commons Compress"
+  homepage: https://commons.apache.org/compress/
 
 notifications:
     commits:      commits@commons.apache.org

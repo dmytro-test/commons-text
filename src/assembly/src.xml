@@ -20,21 +20,17 @@
         <format>tar.gz</format>
         <format>zip</format>
     </formats>
-    <baseDirectory>${project.artifactId}-${commons.release.version}-src</baseDirectory>
+    <baseDirectory>${artifactId}-${commons.release.version}-src</baseDirectory>
     <fileSets>
         <fileSet>
             <includes>
-                <include>checkstyle.xml</include>
-                <include>checkstyle-suppressions.xml</include>
-                <include>CONTRIBUTING.md</include>
-                <include>sb-excludes.xml</include>
                 <include>LICENSE.txt</include>
-                <include>checkstyle-header.txt</include>
                 <include>NOTICE.txt</include>
-                <include>pom.xml</include>
-                <include>PROPOSAL.html</include>
-                <include>README.md</include>
+                <include>README.txt</include>
                 <include>RELEASE-NOTES.txt</include>
+                <include>pom.xml</include>
+                <include>findbugs-exclude-filter.xml</include>
+                <include>pmd-ruleset.xml</include>
             </includes>
         </fileSet>
         <fileSet>

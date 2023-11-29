@@ -1,20 +1,10 @@
-# Maven build files
 target
-*.log
-maven-eclipse.xml
-build.properties
-site-content
-*~
-
-# IntelliJ IDEA files
-.idea
-.iws
-*.iml
-*.ipr
-
-# Eclipse files
-.settings
-.classpath
 .project
-.externalToolBuilders
-/.checkstyle
+.classpath
+.settings
+.idea
+.vscode
+*.iml
+*~
+/.externalToolBuilders/
+/maven-eclipse.xml
