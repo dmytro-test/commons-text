@@ -23,25 +23,33 @@ permissions:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     strategy:
+      fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
         java: [ 8, 11, 17 ]
         experimental: [false]
 #        include:
-#          - java: 18-ea
+#          - java: 21-ea
 #            experimental: true
-
+        
     steps:
     - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       with:
         persist-credentials: false
+    - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3.3.1
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
     - name: Set up JDK ${{ matrix.java }}
       uses: actions/setup-java@5ffc13f4174014e2d4d4572b3d74c3fa61aeb2c2 # v3.11.0
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
-        cache: 'maven'
     - name: Build with Maven
-      run: mvn -Dpolyglot.engine.WarnInterpreterOnly=false
+      # TEMP -Ddoclint=none
+      run: mvn -V --file pom.xml --no-transfer-progress -Ddoclint=none -Darguments=-Xdoclint:none

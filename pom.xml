@@ -1,93 +1,195 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Licensed to the Apache Software Foundation (ASF) under one or more
- contributor license agreements.  See the NOTICE file distributed with
- this work for additional information regarding copyright ownership.
- The ASF licenses this file to You under the Apache License, Version 2.0
- (the "License"); you may not use this file except in compliance with
- the License.  You may obtain a copy of the License at
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+       http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
     <version>58</version>
   </parent>
-  <artifactId>commons-text</artifactId>
-  <version>1.11.0-SNAPSHOT</version>
-  <name>Apache Commons Text</name>
-  <description>Apache Commons Text is a library focused on algorithms working on strings.</description>
-  <url>https://commons.apache.org/proper/commons-text</url>
+
+  <artifactId>commons-compress</artifactId>
+  <version>1.24.0-SNAPSHOT</version>
+  <name>Apache Commons Compress</name>
+  <url>https://commons.apache.org/proper/commons-compress/</url>
+  <inceptionYear>2002</inceptionYear> <!-- from NOTICE file -->
+  <!-- The description is not indented to make it look better in the release notes -->
+  <description>
+Apache Commons Compress defines an API for working with
+compression and archive formats.  These include: bzip2, gzip, pack200,
+lzma, xz, Snappy, traditional Unix Compress, DEFLATE, DEFLATE64, LZ4,
+Brotli, Zstandard and ar, cpio, jar, tar, zip, dump, 7z, arj.
+  </description>
 
   <properties>
-    <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
-    <commons.componentid>text</commons.componentid>
-    <commons.packageId>text</commons.packageId>
-    <commons.module.name>org.apache.commons.text</commons.module.name>
-
-    <commons.release.version>1.11.0</commons.release.version>
-    <commons.release.desc>(Java 8+)</commons.release.desc>
-
-    <commons.jira.id>TEXT</commons.jira.id>
-    <commons.jira.pid>12318221</commons.jira.pid>
-
-    <commons.site.path>text</commons.site.path>
-    <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-text</commons.scmPubUrl>
-    <commons.scmPubCheckoutDirectory>site-content</commons.scmPubCheckoutDirectory>
-
-    <commons.mockito.version>4.11.0</commons.mockito.version>
-
-    <!-- apache-rat-plugin 0.13 and jdepend-maven-plugin 2.0 both fail with LinkageError when generating reports 
-    with maven site plugin 3.11+. However, javadoc 3.4.0+ fails with site plugin versions lower than 3.11. So, we'll 
-    use slightly older site and javadoc versions here in order to be able to generate all reports. -->
-    <commons.site-plugin.version>3.10.0</commons.site-plugin.version>
-
-    <!-- 22.1.0 requires Java 11 -->
-    <graalvm.version>22.0.0.2</graalvm.version>
-    <commons.rng.version>1.5</commons.rng.version>
-
-    <japicmp.skip>false</japicmp.skip>
-
-    <jmh.version>1.36</jmh.version>
-
-    <!-- Commons Release Plugin -->
-    <commons.bc.version>1.10.0</commons.bc.version>
+    <commons.componentid>compress</commons.componentid>
+    <commons.module.name>org.apache.commons.compress</commons.module.name>
+    <commons.jira.id>COMPRESS</commons.jira.id>
+    <commons.jira.pid>12310904</commons.jira.pid>
+    <!-- configuration bits for cutting a release candidate -->
+    <commons.release.version>${project.version}</commons.release.version>
     <commons.rc.version>RC1</commons.rc.version>
+    <!-- old version used by japicmp -->
+    <commons.bc.version>1.23.0</commons.bc.version>
+    <mockito.version>4.11.0</mockito.version>
+
     <commons.release.isDistModule>true</commons.release.isDistModule>
     <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
-    <commons.releaseManagerName>Gary Gregory</commons.releaseManagerName>
+    <commons.releaseManagerName>Gary Gregory</commons.releaseManagerName>    
     <commons.releaseManagerKey>86fdc7e2a11262cb</commons.releaseManagerKey>
+
+    <commons.manifestlocation>${project.build.outputDirectory}/META-INF</commons.manifestlocation>
+    <commons.manifestfile>${commons.manifestlocation}/MANIFEST.MF</commons.manifestfile>
+    <commons.osgi.import>
+      org.tukaani.xz;resolution:=optional,
+      org.brotli.dec;resolution:=optional,
+      com.github.luben.zstd;resolution:=optional,
+      org.objectweb.asm;resolution:=optional,
+      javax.crypto.*;resolution:=optional,
+      *
+    </commons.osgi.import>
+
+    <!-- only show issues of the current version -->
+    <commons.changes.onlyCurrentVersion>true</commons.changes.onlyCurrentVersion>
+
+    <!-- definition uses commons.componentId starting with parent 47,
+         this doesn't work for us -->
+    <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/${project.artifactId}</commons.scmPubUrl>
+    <japicmp.skip>false</japicmp.skip>
+
+    <pax.exam.version>4.13.5</pax.exam.version>
+    <slf4j.version>2.0.7</slf4j.version>
+    <asm.version>9.5</asm.version>
   </properties>
+
+  <issueManagement>
+    <system>jira</system>
+    <url>https://issues.apache.org/jira/browse/COMPRESS</url>
+  </issueManagement>
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.12.0</version>
-    </dependency>
-    <!-- testing -->
-    <dependency>
       <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
+      <artifactId>junit-jupiter-params</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>3.24.2</version>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>2.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.luben</groupId>
+      <artifactId>zstd-jni</artifactId>
+      <version>1.5.5-4</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.brotli</groupId>
+      <artifactId>dec</artifactId>
+      <version>0.1.2</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.tukaani</groupId>
+      <artifactId>xz</artifactId>
+      <version>1.9</version>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- Pack200 -->
+    <dependency>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm</artifactId>
+      <version>${asm.version}</version>
+      <optional>true</optional>
+    </dependency>
+
+    <!--  Test -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
+	<dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.marschall</groupId>
+      <artifactId>memoryfilesystem</artifactId>
+      <version>2.6.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- integration test verifying OSGi bundle works -->
+    <dependency>
+      <groupId>org.ops4j.pax.exam</groupId>
+      <artifactId>pax-exam-container-native</artifactId>
+      <version>${pax.exam.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.exam</groupId>
+      <artifactId>pax-exam-junit4</artifactId>
+      <version>${pax.exam.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.exam</groupId>
+      <artifactId>pax-exam-cm</artifactId>
+      <version>${pax.exam.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.exam</groupId>
+      <artifactId>pax-exam-link-mvn</artifactId>
+      <version>${pax.exam.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.framework</artifactId>
+      <version>7.0.5</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -95,93 +197,218 @@
       <artifactId>commons-io</artifactId>
       <version>2.13.0</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <!--  Use mockito-inline instead of mockito-core to mock and spy on final classes. -->
-      <artifactId>mockito-inline</artifactId>
-      <version>${commons.mockito.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.graalvm.js</groupId>
-      <artifactId>js</artifactId>
-      <version>${graalvm.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.graalvm.js</groupId>
-      <artifactId>js-scriptengine</artifactId>
-      <version>${graalvm.version}</version>
-      <scope>test</scope>
-    </dependency>
+    </dependency>    
     <dependency>
       <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-simple</artifactId>
-      <version>${commons.rng.version}</version>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.12.0</version>
       <scope>test</scope>
-    </dependency>
+    </dependency>    
+
     <dependency>
-      <groupId>org.openjdk.jmh</groupId>
-      <artifactId>jmh-core</artifactId>
-      <version>${jmh.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.openjdk.jmh</groupId>
-      <artifactId>jmh-generator-annprocess</artifactId>
-      <version>${jmh.version}</version>
-      <scope>test</scope>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <version>6.0.0</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
+  <developers>
+    <developer>
+      <name>Torsten Curdt</name>
+      <id>tcurdt</id>
+      <email>tcurdt at apache.org</email>
+    </developer>
+    <developer>
+      <name>Stefan Bodewig</name>
+      <id>bodewig</id>
+      <email>bodewig at apache.org</email>
+    </developer>
+    <developer>
+      <name>Sebastian Bazley</name>
+      <id>sebb</id>
+      <email>sebb at apache.org</email>
+    </developer>
+    <developer>
+      <name>Christian Grobmeier</name>
+      <id>grobmeier</id>
+      <email>grobmeier at apache.org</email>
+    </developer>
+    <developer>
+      <name>Julius Davies</name>
+      <id>julius</id>
+      <email>julius at apache.org</email>
+    </developer>
+    <developer>
+      <name>Damjan Jovanovic</name>
+      <id>damjan</id>
+      <email>damjan at apache.org</email>
+    </developer>
+    <developer>
+      <name>Emmanuel Bourg</name>
+      <id>ebourg</id>
+      <email>ebourg at apache.org</email>
+    </developer>
+    <developer>
+      <id>ggregory</id>
+      <name>Gary Gregory</name>
+      <email>ggregory at apache.org</email>
+      <url>https://www.garygregory.com</url>
+      <organization>The Apache Software Foundation</organization>
+      <organizationUrl>https://www.apache.org/</organizationUrl>      
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+      <timezone>America/New_York</timezone>
+      <properties>
+        <picUrl>https://people.apache.org/~ggregory/img/garydgregory80.png</picUrl>
+      </properties>
+    </developer>
+    <developer>
+      <name>Rob Tompkins</name>
+      <id>chtompki</id>
+      <email>chtompki at apache.org</email>
+    </developer>
+    <developer>
+      <name>Peter Alfred Lee</name>
+      <id>peterlee</id>
+      <email>peterlee at apache.org</email>
+    </developer>
+  </developers>
+
+  <contributors>
+    <contributor>
+      <name>Wolfgang Glas</name>
+      <email>wolfgang.glas at ev-i.at</email>
+    </contributor>
+    <contributor>
+      <name>Christian Kohlschütte</name>
+      <email>ck@newsclub.de</email>
+    </contributor>
+    <contributor>
+      <name>Bear Giles</name>
+      <email>bgiles@coyotesong.com</email>
+    </contributor>
+    <contributor>
+      <name>Michael Kuss</name>
+      <email>mail at michael minus kuss.de</email>
+    </contributor>
+    <contributor>
+      <name>Lasse Collin</name>
+      <email>lasse.collin@tukaani.org</email>
+    </contributor>
+    <contributor>
+      <name>John Kodis</name>
+    </contributor>
+    <contributor>
+      <name>BELUGA BEHR</name>
+    </contributor>
+    <contributor>
+	<name>Simon Spero</name>
+	<email>sesuncedu@gmail.com</email>
+    </contributor>
+    <contributor>
+      <name>Michael Hausegger</name>
+      <email>hausegger.michael@googlemail.com</email>
+    </contributor>
+    <contributor>
+      <name>Arturo Bernal</name>
+      <email>arturobernalg@yahoo.com</email>
+    </contributor>
+  </contributors>
+
+  <scm>
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/commons-compress.git</connection>
+    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-compress.git</developerConnection>
+    <url>https://gitbox.apache.org/repos/asf?p=commons-compress.git</url>
+    <tag>HEAD</tag>
+  </scm>
+
   <build>
-    <defaultGoal>clean verify apache-rat:check japicmp:cmp checkstyle:check spotbugs:check javadoc:javadoc</defaultGoal>
+    <defaultGoal>clean verify apache-rat:check japicmp:cmp javadoc:javadoc</defaultGoal>
     <pluginManagement>
       <plugins>
+        <!-- Override Javadoc config in parent pom to add JCIP tags -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${commons.javadoc.version}</version>
+          <configuration> 
+            <source>${maven.compiler.source}</source>
+            <quiet>true</quiet>
+            <encoding>${commons.encoding}</encoding>
+            <docencoding>${commons.docEncoding}</docencoding>
+            <linksource>true</linksource>
+            <links>
+              <link>${commons.javadoc8.java.link}</link>
+              <link>${commons.javadoc.javaee.link}</link>
+            </links>
+            <tags>
+              <tag>
+                <name>Immutable</name>
+                <placement>a</placement>
+                <head>This class is immutable</head>
+              </tag>
+              <tag>
+                <name>NotThreadSafe</name>
+                <placement>a</placement>
+                <head>This class is not thread-safe</head>
+              </tag>
+              <tag>
+                <name>ThreadSafe</name>
+                <placement>a</placement>
+                <head>This class is thread-safe</head>
+              </tag>
+            </tags>
+          </configuration> 
+        </plugin>
         <plugin>
           <groupId>org.apache.rat</groupId>
           <artifactId>apache-rat-plugin</artifactId>
+          <version>${commons.rat.version}</version>
           <configuration>
             <excludes>
-              <exclude>site-content/**</exclude>
-              <exclude>src/site/resources/download_lang.cgi</exclude>
-              <exclude>src/test/resources/org/apache/commons/text/stringEscapeUtilsTestData.txt</exclude>
-              <exclude>src/test/resources/org/apache/commons/text/lcs-perf-analysis-inputs.csv</exclude>
-              <exclude>src/site/resources/release-notes/RELEASE-NOTES-*.txt</exclude>
+              <!-- files used during tests -->
+              <exclude>src/test/resources/**</exclude>
+              <exclude>.pmd</exclude>
+              <exclude>.projectile</exclude>
+              <exclude>.mvn/**</exclude>
+              <exclude>.gitattributes</exclude>
             </excludes>
           </configuration>
-        </plugin><!-- override skip property of parent pom -->
+        </plugin>
         <plugin>
-          <artifactId>maven-pmd-plugin</artifactId>
-          <version>${commons.pmd.version}</version>
+          <groupId>org.eluder.coveralls</groupId>
+          <artifactId>coveralls-maven-plugin</artifactId>
           <configuration>
-            <targetJdk>${maven.compiler.target}</targetJdk>
+            <failOnServiceError>false</failOnServiceError>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>${commons.felix.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>com.github.siom79.japicmp</groupId>
+          <artifactId>japicmp-maven-plugin</artifactId>
+          <configuration>
+            <parameter>
+              <excludes>
+                <!-- Compress 1.21 -> 1.22 updates ASM from 3.2 to 9.2 for pack200 implementation. -->
+                <exclude>org.apache.commons.compress.harmony.pack200.Segment</exclude>
+                <exclude>org.apache.commons.compress.harmony.pack200.SegmentMethodVisitor</exclude>
+                <exclude>org.apache.commons.compress.harmony.pack200.SegmentAnnotationVisitor</exclude>
+                <exclude>org.apache.commons.compress.harmony.pack200.SegmentFieldVisitor</exclude>
+              </excludes>
+            </parameter>
           </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
       <plugin>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <enableRulesSummary>false</enableRulesSummary>
-          <configLocation>src/conf/checkstyle.xml</configLocation>
-          <headerLocation>src/conf/checkstyle-header.txt</headerLocation>
-          <suppressionsLocation>src/conf/checkstyle-suppressions.xml</suppressionsLocation>
-          <suppressionsFileExpression>src/conf/checkstyle-suppressions.xml</suppressionsFileExpression>
-          <includeTestSourceDirectory>true</includeTestSourceDirectory>
-          <excludes>**/generated/**.java,**/jmh_generated/**.java</excludes>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-        <configuration>
-          <excludeFilterFile>src/conf/spotbugs-exclude-filter.xml</excludeFilterFile>
-        </configuration>
-      </plugin>
-      <plugin>
+        <!-- create the source and binary assemblies -->
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <descriptors>
@@ -192,21 +419,22 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-jar</goal>
-            </goals>
-          </execution>
-        </executions>
         <configuration>
-          <archive combine.children="append">
+          <archive>
             <manifestEntries>
+              <Main-Class>org.apache.commons.compress.archivers.Lister</Main-Class>
+              <Extension-Name>org.apache.commons.compress</Extension-Name>
               <Automatic-Module-Name>${commons.module.name}</Automatic-Module-Name>
             </manifestEntries>
           </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <manifestLocation>${commons.manifestlocation}</manifestLocation>
         </configuration>
       </plugin>
       <plugin>
@@ -220,9 +448,48 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
+        <artifactId>maven-pmd-plugin</artifactId>
         <configuration>
-          <source>${maven.compiler.source}</source>
+          <minimumTokens>200</minimumTokens>
+          <targetJdk>${maven.compiler.source}</targetJdk>
+          <rulesets>
+            <ruleset>${basedir}/src/conf/pmd-ruleset.xml</ruleset>
+          </rulesets>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <configuration>
+          <threshold>Normal</threshold>
+          <effort>Default</effort>
+          <excludeFilterFile>${basedir}/src/conf/spotbugs-exclude-filter.xml</excludeFilterFile>
+       </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>process-test-resources</phase>
+            <configuration>
+              <target>
+                <untar src="${basedir}/src/test/resources/zstd-tests.tar" dest="${project.build.testOutputDirectory}" />
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemPropertyVariables>
+            <pax.exam.karaf.version>${karaf.version}</pax.exam.karaf.version>
+            <commons-compress.version>${project.version}</commons-compress.version>
+          </systemPropertyVariables>
         </configuration>
       </plugin>
     </plugins>
@@ -231,210 +498,66 @@
   <reporting>
     <plugins>
       <plugin>
-        <artifactId>maven-checkstyle-plugin</artifactId>
+        <!-- generate the PMD reports -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
         <configuration>
-          <enableRulesSummary>false</enableRulesSummary>
-          <configLocation>src/conf/checkstyle.xml</configLocation>
-          <headerLocation>src/conf/checkstyle-header.txt</headerLocation>
-          <suppressionsLocation>src/conf/checkstyle-suppressions.xml</suppressionsLocation>
-          <suppressionsFileExpression>src/conf/checkstyle-suppressions.xml</suppressionsFileExpression>
-          <includeTestSourceDirectory>true</includeTestSourceDirectory>
-          <excludes>**/generated/**.java,**/jmh_generated/**.java</excludes>
+          <minimumTokens>200</minimumTokens>
+          <targetJdk>${maven.compiler.source}</targetJdk>
+          <rulesets>
+            <ruleset>${basedir}/src/conf/pmd-ruleset.xml</ruleset>
+          </rulesets>
         </configuration>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>checkstyle</report>
-            </reports>
-          </reportSet>
-        </reportSets>
       </plugin>
-      <!-- Requires setting 'export MAVEN_OPTS="-Xmx512m" ' -->
+      <!-- Override Javadoc config in parent pom to add JCIP tags -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration> 
+          <source>${maven.compiler.source}</source>
+          <quiet>true</quiet>
+          <encoding>${commons.encoding}</encoding>
+          <docencoding>${commons.docEncoding}</docencoding>
+          <linksource>true</linksource>
+          <links>
+            <link>${commons.javadoc8.java.link}</link>
+            <link>${commons.javadoc.javaee.link}</link>
+          </links>
+          <tags>
+            <tag>
+              <name>Immutable</name>
+              <placement>a</placement>
+              <head>This class is immutable</head>
+            </tag>
+            <tag>
+              <name>NotThreadSafe</name>
+              <placement>a</placement>
+              <head>This class is not thread-safe</head>
+            </tag>
+            <tag>
+              <name>ThreadSafe</name>
+              <placement>a</placement>
+              <head>This class is thread-safe</head>
+            </tag>
+          </tags>
+        </configuration> 
+      </plugin>
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
         <configuration>
-          <excludeFilterFile>src/conf/spotbugs-exclude-filter.xml</excludeFilterFile>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>com.github.siom79.japicmp</groupId>
-        <artifactId>japicmp-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <configuration>
-          <targetJdk>${maven.compiler.target}</targetJdk>
-        </configuration>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>pmd</report>
-              <report>cpd</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>taglist-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <configuration>
-          <tagListOptions>
-            <tagClasses>
-              <tagClass>
-                <displayName>Needs Work</displayName>
-                <tags>
-                  <tag>
-                    <matchString>TODO</matchString>
-                    <matchType>exact</matchType>
-                  </tag>
-                  <tag>
-                    <matchString>FIXME</matchString>
-                    <matchType>exact</matchType>
-                  </tag>
-                  <tag>
-                    <matchString>XXX</matchString>
-                    <matchType>exact</matchType>
-                  </tag>
-                </tags>
-              </tagClass>
-              <tagClass>
-                <displayName>Noteable Markers</displayName>
-                <tags>
-                  <tag>
-                    <matchString>NOTE</matchString>
-                    <matchType>exact</matchType>
-                  </tag>
-                  <tag>
-                    <matchString>NOPMD</matchString>
-                    <matchType>exact</matchType>
-                  </tag>
-                  <tag>
-                    <matchString>NOSONAR</matchString>
-                    <matchType>exact</matchType>
-                  </tag>
-                </tags>
-              </tagClass>
-            </tagClasses>
-          </tagListOptions>
-        </configuration>
+          <threshold>Normal</threshold>
+          <effort>Default</effort>
+          <excludeFilterFile>${basedir}/src/conf/spotbugs-exclude-filter.xml</excludeFilterFile>
+       </configuration>
       </plugin>
     </plugins>
   </reporting>
 
-  <inceptionYear>2014</inceptionYear>
-
-  <developers>
-    <developer>
-      <id>kinow</id>
-      <name>Bruno P. Kinoshita</name>
-      <email>kinow@apache.org</email>
-    </developer>
-    <developer>
-      <id>britter</id>
-      <name>Benedikt Ritter</name>
-      <email>britter@apache.org</email>
-    </developer>
-    <developer>
-      <id>chtompki</id>
-      <name>Rob Tompkins</name>
-      <email>chtompki@apache.org</email>
-    </developer>
-    <developer>
-      <id>ggregory</id>
-      <name>Gary Gregory</name>
-      <email>ggregory at apache.org</email>
-      <url>https://www.garygregory.com</url>
-      <organization>The Apache Software Foundation</organization>
-      <organizationUrl>https://www.apache.org/</organizationUrl>
-      <roles>
-        <role>PMC Member</role>
-      </roles>
-      <timezone>America/New_York</timezone>
-      <properties>
-        <picUrl>https://people.apache.org/~ggregory/img/garydgregory80.png</picUrl>
-      </properties>
-    </developer>
-    <developer>
-      <id>djones</id>
-      <name>Duncan Jones</name>
-      <email>djones@apache.org</email>
-    </developer>
-  </developers>
-
-  <contributors>
-    <contributor>
-      <name>Don Jeba</name>
-      <email>donjeba@yahoo.com</email>
-    </contributor>
-    <contributor>
-      <name>Sampanna Kahu</name>
-    </contributor>
-    <contributor>
-      <name>Jarek Strzelecki</name>
-    </contributor>
-    <contributor>
-      <name>Lee Adcock</name>
-    </contributor>
-    <contributor>
-      <name>Amey Jadiye</name>
-      <email>ameyjadiye@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Arun Vinud S S</name>
-    </contributor>
-    <contributor>
-      <name>Ioannis Sermetziadis</name>
-    </contributor>
-    <contributor>
-      <name>Jostein Tveit</name>
-    </contributor>
-    <contributor>
-      <name>Luciano Medallia</name>
-    </contributor>
-    <contributor>
-      <name>Jan Martin Keil</name>
-    </contributor>
-    <contributor>
-      <name>Nandor Kollar</name>
-    </contributor>
-    <contributor>
-      <name>Nick Wong</name>
-    </contributor>
-    <contributor>
-      <name>Ali Ghanbari</name>
-      <url>https://ali-ghanbari.github.io/</url>
-    </contributor>
-  </contributors>
-
-  <scm>
-    <connection>scm:git:https://gitbox.apache.org/repos/asf/commons-text</connection>
-    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-text</developerConnection>
-    <url>https://gitbox.apache.org/repos/asf?p=commons-text.git</url>
-  </scm>
-
-  <issueManagement>
-    <system>jira</system>
-    <url>https://issues.apache.org/jira/browse/TEXT</url>
-  </issueManagement>
-
-  <distributionManagement>
-    <site>
-      <id>apache.website</id>
-      <name>Apache Commons Site</name>
-      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-text/</url>
-    </site>
-  </distributionManagement>
-
   <profiles>
+    <!-- Add long running tests as **/*IT.java -->
     <profile>
-      <id>setup-checkout</id>
-      <activation>
-        <file>
-          <missing>site-content</missing>
-        </file>
-      </activation>
+      <id>run-zipit</id>
       <build>
         <plugins>
           <plugin>
@@ -442,29 +565,57 @@
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
               <execution>
-                <id>prepare-checkout</id>
+                <phase>process-test-resources</phase>
+                <configuration>
+                  <target>
+                    <untar src="${basedir}/src/test/resources/zip64support.tar.bz2" dest="${project.build.testOutputDirectory}" compression="bzip2" />
+                  </target>
+                </configuration>
                 <goals>
                   <goal>run</goal>
                 </goals>
-                <phase>pre-site</phase>
-                <configuration>
-                  <target>
-                    <exec executable="svn">
-                      <arg line="checkout --depth immediates ${commons.scmPubUrl} ${commons.scmPubCheckoutDirectory}"/>
-                    </exec>
-                    <exec executable="svn">
-                      <arg line="update --set-depth exclude ${commons.scmPubCheckoutDirectory}/javadocs"/>
-                    </exec>
-                    <pathconvert pathsep=" " property="dirs">
-                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="*"/>
-                    </pathconvert>
-                    <exec executable="svn">
-                      <arg line="update --set-depth infinity ${dirs}"/>
-                    </exec>
-                  </target>
-                </configuration>
               </execution>
             </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <includes>
+                <include>**/zip/*IT.java</include>
+              </includes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>run-tarit</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <includes>
+                <include>**/tar/*IT.java</include>
+              </includes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>java11+</id>
+      <activation>
+        <jdk>[11,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <release>8</release>
+            </configuration>
           </plugin>
         </plugins>
       </build>
@@ -475,48 +626,13 @@
         <jdk>[9,)</jdk>
       </activation>
       <properties>
-        <!-- coverall version 4.3.0 does not work with java 9+, see https://github.com/trautonen/coveralls-maven-plugin/issues/112 -->
+        <maven.compiler.release>8</maven.compiler.release>
+        <animal.sniffer.skip>true</animal.sniffer.skip>
+        <!-- coverall version 4.3.0 does not work with java 9, see https://github.com/trautonen/coveralls-maven-plugin/issues/112 -->
         <coveralls.skip>true</coveralls.skip>
       </properties>
     </profile>
-    <profile>
-      <id>benchmark</id>
-      <properties>
-        <skipTests>true</skipTests>
-        <benchmark>org.apache</benchmark>
-      </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.1.0</version>
-            <executions>
-              <execution>
-                <id>benchmark</id>
-                <phase>test</phase>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <configuration>
-                  <classpathScope>test</classpathScope>
-                  <executable>java</executable>
-                  <arguments>
-                    <argument>-classpath</argument>
-                    <classpath/>
-                    <argument>org.openjdk.jmh.Main</argument>
-                    <argument>-rf</argument>
-                    <argument>json</argument>
-                    <argument>-rff</argument>
-                    <argument>target/jmh-result.${benchmark}.json</argument>
-                    <argument>${benchmark}</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
+
   </profiles>
+
 </project>
