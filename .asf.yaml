@@ -14,7 +14,7 @@
 # limitations under the License.
 
 github:
-  description: "Apache Commons Compress"
+  description: "Apache Commons Compresss"
   homepage: https://commons.apache.org/compress/
 
 notifications:
